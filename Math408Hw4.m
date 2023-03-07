@@ -16,18 +16,23 @@ grad = A * x;
 iter_count = 0;
 
 % Perform gradient descent with backtracking line search
-while norm(grad) > tol
-    % Determine the step size using backtracking line search
-    step_size = s;
-    while A * ((x - step_size * grad)' * grad) > (A * x)' * grad - alpha * step_size * norm(grad)^2
-        step_size = beta * step_size;
+function [x,fun_val,iter]=gradient_method_backtracking(f,g,x0,s,alpha,beta,epsilon)
+x=x0;
+grad=g(x);
+fun_val=f(x);
+iter=0;
+while (norm(grad)>epsilon) 
+    iter=iter+1;
+    t=s;
+    while (fun_val-f(x-t*grad)<alpha*t*norm(grad)^2)
+        t=beta*t;
     end
-    
-    % Update the solution
-    x = x - step_size * grad;
-    grad = A * x;
-    iter_count = iter_count + 1;
+    x=x-t*grad;
+    fun_val=f(x);
+    grad=g(x);
 end
+end
+
 
 % Display the results
 disp('Solution using gradient descent with backtracking line search:');
